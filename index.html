@@ -1,0 +1,950 @@
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Spaces - Golden Valley School</title>
+    <!-- Chart.js CDN for interactive dashboard charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #12519C;
+            --accent-color: #27A0DB;
+            --highlight-color: #F6C401;
+            --bg-color: #FFFFFF;
+            --text-dark: #2C3E50;
+            --text-muted: #596978;
+            --light-gray: #F8FAFC;
+            --border-color: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Container utility for consistent padding and max-width */
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.35rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            fill: var(--accent-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-menu-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--primary-color);
+        }
+
+        /* Decorative Three-Color Bar under header */
+        .color-bar {
+            display: flex;
+            height: 4px;
+            width: 100%;
+        }
+
+        .color-bar .bar-1 { background-color: var(--primary-color); flex: 1; }
+        .color-bar .bar-2 { background-color: var(--accent-color); flex: 1; }
+        .color-bar .bar-3 { background-color: var(--highlight-color); flex: 1; }
+
+        /* Common Section Layout */
+        section {
+            padding: 90px 0;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            font-size: 1.1rem;
+        }
+
+        /* Hero Section */
+        #hero {
+            padding: 110px 0 90px 0;
+            text-align: center;
+            background: linear-gradient(180deg, #FFFFFF 0%, var(--light-gray) 100%);
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            max-width: 650px;
+            margin: 0 auto 35px auto;
+        }
+
+        /* Statistic Card */
+        .stat-card {
+            background-color: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px 30px;
+            display: inline-block;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            position: relative;
+        }
+
+        .stat-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--highlight-color);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 2px 12px;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            line-height: 1.1;
+        }
+
+        .stat-text {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* Action Buttons */
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            padding: 14px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(39, 160, 219, 0.25);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(18, 81, 156, 0.3);
+        }
+
+        /* What is a Safe Space Section */
+        #what-is {
+            background-color: #FFFFFF;
+        }
+
+        .definition-box {
+            background-color: var(--light-gray);
+            border-left: 5px solid var(--accent-color);
+            padding: 25px 30px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 50px;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+        }
+
+        .signs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .sign-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px 25px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .sign-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            border-color: var(--accent-color);
+        }
+
+        .sign-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: rgba(39, 160, 219, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .sign-icon {
+            width: 36px;
+            height: 36px;
+            fill: var(--primary-color);
+        }
+
+        .sign-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+        }
+
+        /* About Us Section */
+        #about {
+            background-color: var(--light-gray);
+            border-radius: 20px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid var(--border-color);
+        }
+
+        .about-text {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        /* Dashboard Section */
+        #dashboard {
+            background-color: #FFFFFF;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .sample-badge {
+            background-color: var(--highlight-color);
+            color: #000;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .chart-card {
+            background-color: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chart-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 260px;
+        }
+
+        /* Get Help Section */
+        #get-help {
+            background-color: var(--light-gray);
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .contact-card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .contact-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background-color: rgba(18, 81, 156, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-color);
+        }
+
+        .contact-info h4 {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .contact-info a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Emergency Highlight Banner */
+        .emergency-banner {
+            background-color: #FFF5F5;
+            border: 2px dashed #E53E3E;
+            border-radius: 12px;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .emergency-badge {
+            background-color: #E53E3E;
+            color: #FFFFFF;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 10px 18px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .emergency-text {
+            color: #9B2C2C;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        /* Quick Assistance Form */
+        .form-card {
+            background: #FFFFFF;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .form-card h3 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: #FFFFFF;
+            padding: 40px 0 25px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        /* Toast notification */
+        .toast-msg {
+            display: none;
+            background-color: #38A169;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: #FFFFFF;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .emergency-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECTION 1: HEADER & NAVIGATION -->
+    <header>
+        <div class="container header-content">
+            <a href="#hero" class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <span>Safe Spaces</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="menuToggle" aria-label="Toggle navigation">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </button>
+
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#what-is">What is Safe Space</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#get-help">Get Help</a></li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Thin three-color bar -->
+        <div class="color-bar">
+            <div class="bar-1"></div>
+            <div class="bar-2"></div>
+            <div class="bar-3"></div>
+        </div>
+    </header>
+
+    <!-- SECTION 2: HERO -->
+    <section id="hero">
+        <div class="container">
+            <h1 class="hero-title">Golden Valley is a safe space.</h1>
+            <p class="hero-subtitle">
+                A place where every student belongs, thrives, and feels supported throughout their school journey.
+            </p>
+
+            <div class="stat-card">
+                <span class="stat-badge">Key Metric</span>
+                <div class="stat-number">100%</div>
+                <div class="stat-text">Committed to student well-being & supportive peer culture</div>
+            </div>
+
+            <div>
+                <a href="#get-help" class="btn-primary">Get help</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: WHAT IS A SAFE SPACE -->
+    <section id="what-is">
+        <div class="container">
+            <h2 class="section-title">What is a Safe Space?</h2>
+            
+            <div class="definition-box">
+                "A safe space is an environment intended to be free of bias, conflict, criticism, or potentially threatening actions, ideas, or conversations."
+            </div>
+
+            <div class="signs-grid">
+                <!-- Sign 1: Peace -->
+                <div class="sign-card">
+                    <div class="sign-icon-wrapper">
+                        <!-- SVG Dove / Peace Icon -->
+                        <svg class="sign-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-5l6 2.5-6 2.5zm0-8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5z"/>
+                        </svg>
+                    </div>
+                    <h3>1. Peace</h3>
+                    <p>A calm, welcoming environment where students can focus on learning and growth without fear or tension.</p>
+                </div>
+
+                <!-- Sign 2: No one feels ashamed -->
+                <div class="sign-card">
+                    <div class="sign-icon-wrapper">
+                        <!-- SVG Shield / Respect Icon -->
+                        <svg class="sign-icon" viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                        </svg>
+                    </div>
+                    <h3>2. No one feels ashamed</h3>
+                    <p>Dignity and respect for everyone regardless of differences. Mistakes are seen as opportunities to learn.</p>
+                </div>
+
+                <!-- Sign 3: Only kind words -->
+                <div class="sign-card">
+                    <div class="sign-icon-wrapper">
+                        <!-- SVG Chat / Kind Words Icon -->
+                        <svg class="sign-icon" viewBox="0 0 24 24">
+                            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7v-2h10v2zm0-3H7V9h10v2zm0-3H7V6h10v2z"/>
+                        </svg>
+                    </div>
+                    <h3>3. Only kind words</h3>
+                    <p>Positive communication and active listening build trust and uplift classmates every day.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: ABOUT US -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <p class="about-text">
+                    We are students from eighth grade in GVS, and we have made this website for other students who are being bullied or depressed to know they are not alone.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: DASHBOARD -->
+    <section id="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h2 class="section-title" style="margin-bottom:0;">Student Safety Dashboard</h2>
+            </div>
+            <div style="text-align: center; margin-top: 8px;">
+                <span class="sample-badge">Sample data</span>
+            </div>
+            <p class="subtitle" style="margin-top: 15px;">
+                Insights and metrics reflecting student engagement and support program usage.
+            </p>
+
+            <div class="charts-grid">
+                <!-- Chart 1 -->
+                <div class="chart-card">
+                    <h3>Student Support Resources Usage</h3>
+                    <div class="chart-container">
+                        <canvas id="chart1"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2 -->
+                <div class="chart-card">
+                    <h3>Feelings of Belonging at School</h3>
+                    <div class="chart-container">
+                        <canvas id="chart2"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3 -->
+                <div class="chart-card">
+                    <h3>Types of Help Requested</h3>
+                    <div class="chart-container">
+                        <canvas id="chart3"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: GET HELP -->
+    <section id="get-help">
+        <div class="container">
+            <h2 class="section-title">Get Help</h2>
+            <p class="subtitle">If you don't feel safe, talk to the counselor [Wellness Team]. We are here to listen and help you.</p>
+
+            <!-- Emergency Banner -->
+            <div class="emergency-banner">
+                <div class="emergency-badge">EMERGENCY: 911</div>
+                <div class="emergency-text">
+                    If you or someone you know is in immediate physical danger or facing a medical crisis, please call 911 immediately or inform a teacher right away.
+                </div>
+            </div>
+
+            <!-- Contact Cards -->
+            <div class="help-grid">
+                <!-- Email Contact -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info">
+                        <h4>Wellness Email</h4>
+                        <a href="mailto:wellness.correos@goldenvalley.ed.cr">wellness.correos@goldenvalley.ed.cr</a>
+                    </div>
+                </div>
+
+                <!-- Phone Contact -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-info">
+                        <h4>Counseling Office</h4>
+                        <a href="tel:+50622680000">+506 2268 0000 / Ext. 104</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Assistance Form -->
+            <div class="form-card">
+                <h3>Send a Quick Message to Wellness</h3>
+                <form id="assistanceForm" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label for="studentGrade">Grade / Class (Optional)</label>
+                        <input type="text" id="studentGrade" class="form-control" placeholder="e.g. 8th Grade">
+                    </div>
+                    <div class="form-group">
+                        <label for="messageText">How can we support you today?</label>
+                        <textarea id="messageText" class="form-control" required placeholder="Type your message here... You can ask for a counselor appointment or share what's on your mind."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Send Message</button>
+                    <div id="toast" class="toast-msg">Thank you! Your message has been sent to the Wellness Team.</div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: FOOTER -->
+    <footer>
+        <div class="container">
+            <ul class="footer-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#what-is">What is Safe Space</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#get-help">Get Help</a></li>
+            </ul>
+            <p>Golden Valley School, 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile nav when clicking a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Quick Message Form Handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            document.getElementById('assistanceForm').reset();
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+
+        // Initialize Charts on window load
+        window.addEventListener('load', () => {
+            // Chart Color Palette based on specs
+            const primaryColor = '#12519C';
+            const accentColor = '#27A0DB';
+            const highlightColor = '#F6C401';
+            const softGray = '#E2E8F0';
+
+            // Chart 1: Bar Chart (Student Support Resources Usage)
+            const ctx1 = document.getElementById('chart1').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Counseling', 'Peer Chat', 'Resource Hub', 'Wellness Workshops'],
+                    datasets: [{
+                        label: 'Monthly Interactions',
+                        data: [145, 210, 320, 180],
+                        backgroundColor: [primaryColor, accentColor, highlightColor, '#60A5FA'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#F1F5F9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Chart 2: Doughnut Chart (Feelings of Belonging at School)
+            const ctx2 = document.getElementById('chart2').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Always Safe', 'Mostly Safe', 'Seeking Support'],
+                    datasets: [{
+                        data: [72, 21, 7],
+                        backgroundColor: [accentColor, highlightColor, primaryColor],
+                        borderWidth: 2,
+                        borderColor: '#FFFFFF'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Arial' } } }
+                    }
+                }
+            });
+
+            // Chart 3: Line Chart (Types of Help Requested)
+            const ctx3 = document.getElementById('chart3').getContext('2d');
+            new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                    datasets: [
+                        {
+                            label: 'Bullying Advice',
+                            data: [30, 25, 20, 15, 10],
+                            borderColor: primaryColor,
+                            backgroundColor: primaryColor,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Peer Mediation',
+                            data: [15, 22, 28, 35, 40],
+                            borderColor: accentColor,
+                            backgroundColor: accentColor,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Stress Management',
+                            data: [20, 30, 25, 40, 45],
+                            borderColor: highlightColor,
+                            backgroundColor: highlightColor,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Arial' } } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#F1F5F9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
